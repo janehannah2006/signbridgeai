@@ -1,0 +1,542 @@
+import { User, Doctor, Consultation, TranscriptRecord, MedicalInstruction } from '../types';
+
+export const mockUser: User = {
+  id: "usr-meena-01",
+  name: "Meena Krishnan",
+  email: "meena.krishnan@example.com",
+  age: 28,
+  gender: "Female",
+  language: "en",
+  isDeafOrHardOfHearing: true,
+  hearingLossType: "profound_deaf",
+  preferredCommunication: "captions_and_text",
+  avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+  medicalProfile: {
+    bloodGroup: "O+ (Positive)",
+    allergies: ["Penicillin", "Sulfa Antibiotics"],
+    currentMedications: ["Paracetamol 500mg (SOS / as needed)", "Vitamin D3 1000 IU (Daily)"],
+    chronicConditions: ["Bilateral Sensorineural Hearing Loss (Congenital)", "Occasional Tension Headache"],
+    emergencyContact: {
+      name: "Ramesh Krishnan",
+      relationship: "Father",
+      phone: "+91 98401 23456",
+    },
+    notes: "Requires high-contrast captions and two-way text communication during doctor consultations.",
+  },
+};
+
+export const mockDoctors: Doctor[] = [
+  {
+    id: "doc-kumar",
+    name: "Dr. Rajesh Kumar",
+    specialization: "General Medicine & ENT",
+    hospital: "Apollo Healthcare Center, Chennai",
+    experienceYears: 16,
+    avatar: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=300&auto=format&fit=crop&q=80",
+    rating: 4.9,
+  },
+  {
+    id: "doc-priya",
+    name: "Dr. Priya Natarajan",
+    specialization: "General Physician & Cardiology",
+    hospital: "MIOT International Hospitals",
+    experienceYears: 14,
+    avatar: "https://images.unsplash.com/photo-1594824813596-76495f269a91?w=300&auto=format&fit=crop&q=80",
+    rating: 4.9,
+  },
+  {
+    id: "doc-arun",
+    name: "Dr. Arun Sundaram",
+    specialization: "Audiologist & Otologist",
+    hospital: "Fortis Medical Institute, Chennai",
+    experienceYears: 11,
+    avatar: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&auto=format&fit=crop&q=80",
+    rating: 4.8,
+  },
+  {
+    id: "doc-ananya",
+    name: "Dr. Ananya Sharma",
+    specialization: "Internal Medicine Specialist",
+    hospital: "Apollo Healthcare Center, Chennai",
+    experienceYears: 12,
+    avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&auto=format&fit=crop&q=80",
+    rating: 4.9,
+  },
+];
+
+export const consultationReasons = [
+  { id: 'reason-symptoms', labelEn: 'General symptoms (Fever, pain, dizziness)', labelTa: 'பொதுவான அறிகுறிகள் (காய்ச்சல், வலி, தலைசுற்றல்)', category: 'general' },
+  { id: 'reason-followup', labelEn: 'Routine Follow-up & Review', labelTa: 'வழக்கமான மறுபரிசோதனை (Follow-up)', category: 'followup' },
+  { id: 'reason-medication', labelEn: 'Medication or Prescription question', labelTa: 'மருந்து மற்றும் மருந்துச்சீட்டு விளக்கம்', category: 'medication' },
+  { id: 'reason-emergency', labelEn: 'Urgent Non-Emergency Concern', labelTa: 'அவசரமற்ற உடனடி உடல்நலக் கவலை', category: 'emergency' },
+  { id: 'reason-other', labelEn: 'Other Medical Questions', labelTa: 'மற்ற மருத்துவக் கேள்விகள்', category: 'other' },
+];
+
+export const signLanguageVocabulary = [
+  {
+    id: 'sign-help',
+    nameEn: 'I need help',
+    nameTa: 'எனக்கு உதவி வேண்டும்',
+    phraseEn: 'I need medical assistance.',
+    phraseTa: 'எனக்கு மருத்துவ உதவி தேவைப்படுகிறது.',
+    icon: '🆘',
+    description: 'Open palms crossed over chest or moving outward',
+  },
+  {
+    id: 'sign-pain',
+    nameEn: 'Pain / Hurt',
+    nameTa: 'வலி / வேதனை',
+    phraseEn: 'I am experiencing sharp pain here.',
+    phraseTa: 'இங்கு எனக்கு அதிக வலி இருக்கிறது.',
+    icon: '⚡',
+    description: 'Index fingers pointing together at the pain location',
+  },
+  {
+    id: 'sign-yes',
+    nameEn: 'Yes / I understand',
+    nameTa: 'ஆம் / புரிந்தது',
+    phraseEn: 'Yes, I understand clearly.',
+    phraseTa: 'ஆம், எனக்கு தெளிவாக புரிந்தது.',
+    icon: '👍',
+    description: 'Fist nodding up and down like a nodding head',
+  },
+  {
+    id: 'sign-no',
+    nameEn: 'No / Disagree',
+    nameTa: 'இல்லை / மறுப்பு',
+    phraseEn: 'No, that is not the case.',
+    phraseTa: 'இல்லை, அப்படி இல்லை.',
+    icon: '✋',
+    description: 'Index and middle finger tapping thumb quickly',
+  },
+  {
+    id: 'sign-medicine',
+    nameEn: 'Medicine / Tablet',
+    nameTa: 'மருந்து / மாத்திரை',
+    phraseEn: 'What about my prescribed medication?',
+    phraseTa: 'எனது மருந்து மாத்திரைகள் பற்றிய விவரம் என்ன?',
+    icon: '💊',
+    description: 'Middle finger rocking in center of flat palm',
+  },
+  {
+    id: 'sign-dizzy',
+    nameEn: 'Feeling Dizzy',
+    nameTa: 'தலைச்சுற்றல் உள்ளது',
+    phraseEn: 'I feel lightheaded and dizzy when standing.',
+    phraseTa: 'எழுந்து நிற்கும்போது தலைச்சுற்றல் ஏற்படுகிறது.',
+    icon: '💫',
+    description: 'Curled fingers circling in front of forehead',
+  },
+  {
+    id: 'sign-thanks',
+    nameEn: 'Thank you Doctor',
+    nameTa: 'நன்றி மருத்துவரே',
+    phraseEn: 'Thank you for your guidance, Doctor.',
+    phraseTa: 'உங்கள் ஆலோசனைக்கு மிக்க நன்றி, மருத்துவரே.',
+    icon: '🙏',
+    description: 'Fingertips touching chin and extending forward',
+  },
+  {
+    id: 'sign-repeat',
+    nameEn: 'Please repeat',
+    nameTa: 'மீண்டும் சொல்லுங்கள்',
+    phraseEn: 'Could you please repeat or rephrase that statement?',
+    phraseTa: 'தயவுசெய்து மீண்டும் ஒருமுறை கூற முடியுமா?',
+    icon: '🔄',
+    description: 'Right curved palm sweeping into left palm',
+  },
+];
+
+export const initialDoctorConversations = [
+  {
+    doctorId: 'doc-kumar',
+    doctorName: 'Dr. Rajesh Kumar',
+    doctorSpecialization: 'General Medicine & ENT',
+    doctorAvatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=300&auto=format&fit=crop&q=80',
+    unreadCount: 1,
+    lastMessage: 'Please check your temperature and message me.',
+    lastMessageTime: '2 min ago',
+    isOnline: true,
+    messages: [
+      {
+        id: 'msg-k1',
+        sender: 'doctor' as const,
+        text: 'Hello Meena! How has your fever been since this morning?',
+        tamilText: 'வணக்கம் மீனா! இன்று காலையிலிருந்து உங்கள் காய்ச்சல் எப்படி இருக்கிறது?',
+        timestamp: '10:15 AM',
+        isRead: true,
+      },
+      {
+        id: 'msg-k2',
+        sender: 'patient' as const,
+        text: 'Hello Doctor. The temperature came down to 99°F after taking the tablet.',
+        tamilText: 'வணக்கம் மருத்துவரே. மாத்திரை உட்கொண்ட பிறகு உடல் வெப்பநிலை 99°F ஆக குறைந்தது.',
+        timestamp: '10:18 AM',
+        isRead: true,
+      },
+      {
+        id: 'msg-k3',
+        sender: 'doctor' as const,
+        text: 'That is good progress. Please check your temperature at 4 PM and message me here.',
+        tamilText: 'நல்ல முன்னேற்றம். மாலை 4 மணிக்கு வெப்பநிலையை மீண்டும் சரிபார்த்து இங்கு தெரிவிக்கவும்.',
+        timestamp: '10:20 AM',
+        isRead: false,
+      },
+    ],
+  },
+  {
+    doctorId: 'doc-priya',
+    doctorName: 'Dr. Priya Natarajan',
+    doctorSpecialization: 'Cardiology & General',
+    doctorAvatar: 'https://images.unsplash.com/photo-1594824813596-76495f269a91?w=300&auto=format&fit=crop&q=80',
+    unreadCount: 0,
+    lastMessage: 'Consultation completed. Keep up regular walking.',
+    lastMessageTime: 'Yesterday',
+    isOnline: false,
+    messages: [
+      {
+        id: 'msg-p1',
+        sender: 'doctor' as const,
+        text: 'Your resting heart rate chart looks very stable.',
+        tamilText: 'உங்கள் இதய துடிப்பு வரைபடம் மிகவும் சீராக உள்ளது.',
+        timestamp: 'Yesterday 04:30 PM',
+        isRead: true,
+      },
+      {
+        id: 'msg-p2',
+        sender: 'patient' as const,
+        text: 'Thank you Doctor. I will continue the light morning walk.',
+        tamilText: 'நன்றி மருத்துவரே. காலை நேர நடைப்பயிற்சியை தொடர்கிறேன்.',
+        timestamp: 'Yesterday 04:32 PM',
+        isRead: true,
+      },
+    ],
+  },
+  {
+    doctorId: 'doc-ai-assistant',
+    doctorName: 'AI Communication Assistant',
+    doctorSpecialization: 'Clinical Speech & Language Bridge',
+    doctorAvatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=80',
+    unreadCount: 2,
+    lastMessage: 'Your consultation summary and prescription checklist are ready.',
+    lastMessageTime: '1 hr ago',
+    isOnline: true,
+    messages: [
+      {
+        id: 'msg-ai1',
+        sender: 'system' as const,
+        text: 'Welcome to your SignBridge AI Medical Hub. I am here to help you explain symptoms, translate bilingual dialogue, and summarize visits.',
+        tamilText: 'உங்கள் சைகைப்பாலம் AI மருத்துவ மையத்திற்கு நல்வரவு. அறிகுறிகளை விளக்கவும், மொழிபெயர்க்கவும் உதவ நான் தயாராக உள்ளேன்.',
+        timestamp: '09:00 AM',
+        isRead: true,
+      },
+      {
+        id: 'msg-ai2',
+        sender: 'system' as const,
+        text: 'Your consultation summary and prescription checklist are ready for review in History.',
+        tamilText: 'உங்கள் மருத்துவ சுருக்கம் மற்றும் மருந்து பட்டியல் தயார் நிலையில் உள்ளது.',
+        timestamp: '10:00 AM',
+        isRead: false,
+      },
+    ],
+  },
+];
+
+export const initialInstructions: MedicalInstruction[] = [
+  {
+    id: "ins-01",
+    consultationId: "cons-15-aug",
+    doctorName: "Dr. Ananya Sharma",
+    category: "medication",
+    text: "Take Paracetamol 500mg tablet twice daily after breakfast and dinner for 3 days.",
+    tamilText: "காலை மற்றும் இரவு உணவுக்குப் பிறகு 3 நாட்களுக்கு பாராசிட்டமால் 500 மிகி மாத்திரையை இருவேளை உட்கொள்ளவும்.",
+    status: "confirmed",
+    confidence: 0.98,
+    timestamp: "09:14 AM",
+    date: "15 Aug 2026",
+  },
+  {
+    id: "ins-02",
+    consultationId: "cons-15-aug",
+    doctorName: "Dr. Ananya Sharma",
+    category: "lifestyle",
+    text: "Drink at least 2.5 to 3 liters of warm water daily and avoid cold beverages.",
+    tamilText: "தினமும் குறைந்தது 2.5 முதல் 3 லிட்டர் வெதுவெதுப்பான நீர் அருந்தவும், குளிர்ந்த பானங்களைத் தவிர்க்கவும்.",
+    status: "confirmed",
+    confidence: 0.96,
+    timestamp: "09:16 AM",
+    date: "15 Aug 2026",
+  },
+  {
+    id: "ins-03",
+    consultationId: "cons-15-aug",
+    doctorName: "Dr. Ananya Sharma",
+    category: "follow-up",
+    text: "Schedule a review consultation after 7 days if tension headache persists.",
+    tamilText: "தலைவலி தொடர்ந்தால் 7 நாட்களுக்குப் பிறகு மறுஆலோசனைக்கு வரவும்.",
+    status: "confirmed",
+    confidence: 0.97,
+    timestamp: "09:20 AM",
+    date: "15 Aug 2026",
+  },
+  {
+    id: "ins-04",
+    consultationId: "cons-02-aug",
+    doctorName: "Dr. Rajesh Kumar",
+    category: "tests",
+    text: "Complete routine pure-tone audiometry hearing assessment at local diagnostic lab.",
+    tamilText: "அருகிலுள்ள ஆய்வகத்தில் வழக்கமான தூய-தொனி ஆடியோமெட்ரி கேட்கும் பரிசோதனையை முடிக்கவும்.",
+    status: "confirmed",
+    confidence: 0.94,
+    timestamp: "11:08 AM",
+    date: "02 Aug 2026",
+  },
+  {
+    id: "ins-05",
+    consultationId: "cons-02-aug",
+    doctorName: "Dr. Rajesh Kumar",
+    category: "warnings",
+    text: "Avoid inserting cotton buds or objects into ear canal during cleaning.",
+    tamilText: "காதுகளை சுத்தம் செய்யும்போது பஞ்சு குச்சிகளை காதுக்குள் செலுத்த வேண்டாம்.",
+    status: "needs_confirmation",
+    confidence: 0.91,
+    timestamp: "11:12 AM",
+    date: "02 Aug 2026",
+  },
+];
+
+export const initialConsultations: Consultation[] = [
+  {
+    id: "cons-15-aug",
+    doctor: mockDoctors[0],
+    date: "15 Aug 2026",
+    time: "09:00 AM",
+    duration: "18 minutes",
+    language: "English",
+    status: "completed",
+    transcriptCount: 14,
+    instructionCount: 3,
+    notes: "Follow-up for mild migraine & seasonal fatigue. Prescribed hydration & mild analgesics.",
+  },
+  {
+    id: "cons-02-aug",
+    doctor: mockDoctors[1],
+    date: "02 Aug 2026",
+    time: "11:00 AM",
+    duration: "12 minutes",
+    language: "Tamil",
+    status: "completed",
+    transcriptCount: 10,
+    instructionCount: 2,
+    notes: "Annual hearing aid calibration & auditory canal wellness check.",
+  },
+  {
+    id: "cons-20-jul",
+    doctor: mockDoctors[2],
+    date: "20 Jul 2026",
+    time: "04:30 PM",
+    duration: "25 minutes",
+    language: "English",
+    status: "completed",
+    transcriptCount: 18,
+    instructionCount: 2,
+    notes: "Routine cardiovascular checkup and resting heart rate review.",
+  },
+];
+
+export const initialTranscripts: TranscriptRecord[] = [
+  {
+    id: "tr-01",
+    consultationId: "cons-15-aug",
+    doctorName: "Dr. Ananya Sharma",
+    doctorSpecialization: "General Physician",
+    date: "15 Aug 2026",
+    duration: "18 minutes",
+    language: "English",
+    messages: [
+      {
+        id: "msg-101",
+        speaker: "doctor",
+        text: "Good morning Meena! I can see your SignBridge captions are connected. How are you feeling today?",
+        tamilText: "காலை வணக்கம் மீனா! உங்கள் சைகைப்பாலம் வசனங்கள் இணைக்கப்பட்டுள்ளன. இன்று நீங்கள் எப்படி உணர்கிறீர்கள்?",
+        time: "09:02 AM",
+      },
+      {
+        id: "msg-102",
+        speaker: "patient",
+        text: "Good morning Doctor. I have been having dull headaches since yesterday afternoon.",
+        tamilText: "காலை வணக்கம் மருத்துவரே. நேற்று மதியத்திலிருந்து எனக்கு லேசான தலைவலி உள்ளது.",
+        time: "09:03 AM",
+      },
+      {
+        id: "msg-103",
+        speaker: "doctor",
+        text: "Have you experienced any fever, neck stiffness, or blurry vision with the headache?",
+        tamilText: "தலைவலியுடன் காய்ச்சல், கழுத்து வலி அல்லது பார்வை மங்கலாகுதல் உள்ளதா?",
+        time: "09:05 AM",
+      },
+      {
+        id: "msg-104",
+        speaker: "patient",
+        text: "No fever or blurred vision, but long screen hours at work seem to make it worse.",
+        tamilText: "காய்ச்சல் இல்லை, ஆனால் நீண்ட நேரம் கணினியில் வேலை செய்யும்போது வலி அதிகமாகிறது.",
+        time: "09:07 AM",
+      },
+      {
+        id: "msg-105",
+        speaker: "doctor",
+        text: "I understand. It appears to be eye-strain and mild tension headache.",
+        tamilText: "புரிகிறது. இது கண் சோர்வு மற்றும் லேசான தலைவலி காரணமாக இருக்கலாம்.",
+        time: "09:10 AM",
+      },
+      {
+        id: "msg-106",
+        speaker: "doctor",
+        text: "Please continue taking your medication: Paracetamol 500mg twice daily after food for 3 days.",
+        tamilText: "உங்கள் மருந்தை தொடர்ந்து உட்கொள்ளவும்: உணவுக்குப் பிறகு 3 நாட்களுக்கு பாராசிட்டமால் 500 மிகி இருவேளை.",
+        time: "09:14 AM",
+      },
+      {
+        id: "msg-107",
+        speaker: "doctor",
+        text: "Drink at least 2.5 to 3 liters of warm water daily and avoid cold beverages.",
+        tamilText: "தினமும் குறைந்தது 2.5 முதல் 3 லிட்டர் வெதுவெதுப்பான நீர் அருந்தவும், குளிர்ந்த பானங்களைத் தவிர்க்கவும்.",
+        time: "09:16 AM",
+      },
+      {
+        id: "msg-108",
+        speaker: "doctor",
+        text: "I recommend a follow-up review after 7 days if the headache doesn't subside.",
+        tamilText: "தலைவலி குறையவில்லை என்றால் 7 நாட்களுக்குப் பிறகு மறுஆலோசனை பெற பரிந்துரைக்கிறேன்.",
+        time: "09:20 AM",
+      },
+    ],
+    instructions: [initialInstructions[0], initialInstructions[1], initialInstructions[2]],
+  },
+  {
+    id: "tr-02",
+    consultationId: "cons-02-aug",
+    doctorName: "Dr. Rajesh Kumar",
+    doctorSpecialization: "ENT & Audiology Specialist",
+    date: "02 Aug 2026",
+    duration: "12 minutes",
+    language: "Tamil",
+    messages: [
+      {
+        id: "msg-201",
+        speaker: "doctor",
+        text: "வணக்கம் மீனா, உங்கள் காதுகேட்கும் கருவியின் செயல்பாடு சீராக உள்ளதா?",
+        tamilText: "வணக்கம் மீனா, உங்கள் காதுகேட்கும் கருவியின் செயல்பாடு சீராக உள்ளதா?",
+        time: "11:02 AM",
+      },
+      {
+        id: "msg-202",
+        speaker: "patient",
+        text: "ஆம் மருத்துவரே, ஆனால் சில நேரங்களில் அதிக இரைச்சல் கேட்கிறது.",
+        tamilText: "ஆம் மருத்துவரே, ஆனால் சில நேரங்களில் அதிக இரைச்சல் கேட்கிறது.",
+        time: "11:04 AM",
+      },
+      {
+        id: "msg-203",
+        speaker: "doctor",
+        text: "வழக்கமான தூய-தொனி ஆடியோமெட்ரி பரிசோதனையை ஆய்வகத்தில் மேற்கொள்ளவும்.",
+        tamilText: "வழக்கமான தூய-தொனி ஆடியோமெட்ரி பரிசோதனையை ஆய்வகத்தில் மேற்கொள்ளவும்.",
+        time: "11:08 AM",
+      },
+    ],
+    instructions: [initialInstructions[3], initialInstructions[4]],
+  },
+];
+
+/**
+ * Realistic sequential doctor statements for Live Demo Consultation stream
+ */
+export interface DemoUtterance {
+  speaker: 'doctor' | 'patient';
+  text: string;
+  tamilText: string;
+  confidence: number;
+  isUnclear?: boolean;
+  delayMs: number;
+  instruction?: {
+    category: 'medication' | 'follow-up' | 'tests' | 'lifestyle' | 'appointments' | 'warnings';
+    text: string;
+    tamilText: string;
+    status: 'confirmed' | 'needs_confirmation';
+    confidence: number;
+  };
+}
+
+export const demoConsultationSequence: DemoUtterance[] = [
+  {
+    speaker: "doctor",
+    text: "Good morning Meena! I can see your video clearly and captions are active. How are you feeling today?",
+    tamilText: "காலை வணக்கம் மீனா! உங்கள் வீடியோ தெளிவாக தெரிகிறது, நேரடி வசனங்கள் செயலில் உள்ளன. இன்று நீங்கள் எப்படி உணர்கிறீர்கள்?",
+    confidence: 0.98,
+    delayMs: 2500,
+  },
+  {
+    speaker: "doctor",
+    text: "Have you experienced any symptoms like headache or nausea since our previous session?",
+    tamilText: "நமது முந்தைய அமர்வுக்குப் பிறகு தலைவலி அல்லது குமட்டல் போன்ற அறிகுறிகள் ஏதேனும் ஏற்பட்டதா?",
+    confidence: 0.97,
+    delayMs: 4000,
+  },
+  {
+    speaker: "doctor",
+    text: "Please continue taking your medication. Take the tablet twice daily after breakfast and dinner.",
+    tamilText: "உங்கள் மருந்துகளைத் தொடர்ந்து உட்கொள்ளவும். காலை மற்றும் இரவு உணவுக்குப் பிறகு மாத்திரையை இருமுறை உட்கொள்ளவும்.",
+    confidence: 0.99,
+    delayMs: 4500,
+    instruction: {
+      category: "medication",
+      text: "Take the tablet twice daily after breakfast and dinner for 5 days.",
+      tamilText: "காலை மற்றும் இரவு உணவுக்குப் பிறகு 5 நாட்களுக்கு மாத்திரையை இருமுறை உட்கொள்ளவும்.",
+      status: "confirmed",
+      confidence: 0.99,
+    },
+  },
+  {
+    speaker: "doctor",
+    text: "Make sure you drink plenty of warm water throughout the day and get at least 8 hours of rest.",
+    tamilText: "நாள் முழுவதும் போதுமான வெதுவெதுப்பான நீர் குடிப்பதை உறுதிசெய்து, குறைந்தது 8 மணிநேரம் ஓய்வெடுக்கவும்.",
+    confidence: 0.95,
+    delayMs: 4500,
+    instruction: {
+      category: "lifestyle",
+      text: "Drink plenty of warm water throughout the day and ensure 8 hours of sleep.",
+      tamilText: "நாள் முழுவதும் வெதுவெதுப்பான நீர் அருந்தவும், 8 மணிநேர தூக்கத்தை உறுதிப்படுத்தவும்.",
+      status: "confirmed",
+      confidence: 0.95,
+    },
+  },
+  {
+    speaker: "doctor",
+    text: "Also... [unclear audio distortion] ... take caution with evening dosage...",
+    tamilText: "மேலும்... [தெளிவற்ற ஒலி] ... மாலை நேர மருந்து அளவுகளில் கவனமாக இருக்கவும்...",
+    confidence: 0.64,
+    isUnclear: true,
+    delayMs: 5000,
+    instruction: {
+      category: "warnings",
+      text: "Evening dosage instruction was partially muffled. Please verify with doctor before taking.",
+      tamilText: "மாலை நேர மருந்து அளவு தெளிவாக இல்லை. எடுத்துக்கொள்வதற்கு முன் மருத்துவரிடம் உறுதிப்படுத்தவும்.",
+      status: "needs_confirmation",
+      confidence: 0.64,
+    },
+  },
+  {
+    speaker: "doctor",
+    text: "I would like to schedule a follow-up review appointment after 7 days to check your recovery.",
+    tamilText: "உங்கள் உடல்நல முன்னேற்றத்தை சரிபார்க்க 7 நாட்களுக்குப் பிறகு மறுஆலோசனை திட்டமிட விரும்புகிறேன்.",
+    confidence: 0.98,
+    delayMs: 4500,
+    instruction: {
+      category: "follow-up",
+      text: "Schedule a follow-up consultation after 7 days.",
+      tamilText: "7 நாட்களுக்குப் பிறகு மறுஆலோசனை திட்டமிடவும்.",
+      status: "confirmed",
+      confidence: 0.98,
+    },
+  },
+];

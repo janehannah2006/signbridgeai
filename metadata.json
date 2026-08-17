@@ -1,0 +1,11 @@
+{
+  "name": "SignBridge AI",
+  "description": "AI-Powered Accessibility Assistant for Deaf and Hard-of-Hearing Patients During Online Medical Consultations",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
